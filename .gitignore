@@ -1,0 +1,32 @@
+﻿# CLion
+.idea/
+cmake-build-debug/
+cmake-build-release/
+
+# Build files
+build/
+out/
+
+# Compiled files
+*.exe
+*.o
+*.obj
+*.a
+*.lib
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# Test results
+Testing/
+*.gcov
+*.gcda
+*.gcno
+
+# Visual Studio
+.vs/
+*.user
+*.suo
