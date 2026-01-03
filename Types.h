@@ -1,12 +1,12 @@
 #pragma once
 #include <array>
 
-// Розмірність системи (порядок диф. рівняння)
-// Рівняння (1) має 4-й порядок, тому система має 4 змінні
-constexpr size_t SYSTEM_ORDER = 4; 
+// System dimension (order of differential equation)
+// Equation (1) is 4th order, so system has 4 variables
+constexpr size_t SYSTEM_ORDER = 4;
 
-// State - це {x, x', x'', x'''} у поточний момент часу
+// State is {x, x', x'', x'''} at current time
 using State = std::array<double, SYSTEM_ORDER>;
 
-// Функція правої частини рівняння: dy/dt = f(t, y)
+// Right-hand side function of equation: dy/dt = f(t, y)
 using DerivativeFunc = State (*)(double t, const State& y);

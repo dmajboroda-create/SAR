@@ -8,79 +8,68 @@
 
 int main() {
     // ==========================================
-    // ПАРАМЕТРИ СИМУЛЯЦІЇ
+    // SIMULATION PARAMETERS
     // ==========================================
-    const double t_start = 0.0;      // Початковий час
-    const double t_end = 10.0;       // Кінцевий час моделювання
-    const double h = 0.01;           // Крок інтегрування (чим менше, тим точніше)
+    const double t_start = 0.0;      // Start time
+    const double t_end = 10.0;       // End time of simulation
+    const double h = 0.01;           // Integration step (smaller step = higher accuracy)
 
     // ==========================================
-    // ПОЧАТКОВІ УМОВИ
-    // Початковий стан: двигун стоїть, всі похідні = 0
+    // INITIAL CONDITIONS
+    // Initial state: engine at rest, all derivatives = 0
     // state = {x, x', x'', x'''}
     // ==========================================
     State state = {0.0, 0.0, 0.0, 0.0};
 
     // ==========================================
-    // ВІДКРИТТЯ ФАЙЛУ для запису результатів
+    // OPEN OUTPUT FILE for saving results
     // ==========================================
-    std::ofstream file("../simulation_results.csv");
+    std::ofstream file("simulation_results.csv");
     if (!file.is_open()) {
-        std::cerr << "Error opening file!" << std::endl;
-        std::cerr << "Trying to create in current directory..." << std::endl;
-        file.open("simulation_results.csv");
-        if (!file.is_open()) {
-            std::cerr << "Failed to create file!" << std::endl;
-            return 1;
-        }
+        std::cerr << "Error: Cannot create output file 'simulation_results.csv'" << std::endl;
+        return 1;
     }
 
-    // ==========================================
-    // ЗАГОЛОВКИ CSV
-    // t      - час
-    // x      - кількість обертів (вихід системи)
-    // x_d    - швидкість зміни обертів (x')
-    // x_dd   - прискорення (x'')
-    // x_ddd  - третя похідна (x''')
-    // x_dddd - четверта похідна (x⁽⁴⁾)
-    // F      - збурення F(t)
-    // ==========================================
+    // CSV headers
+    // t      - time (s)
+    // x      - revolutions (rev/s) - system output
+    // x_d    - rate of change of revolutions (x') - (rev/s²)
+    // x_dd   - acceleration (x'') - (rev/s³)
+    // x_ddd  - third derivative (x''') - (rev/s⁴)
+    // x_dddd - fourth derivative (x⁽⁴⁾) - (rev/s⁵)
+    // F      - disturbance F(t)
     file << "t;x;x_d;x_dd;x_ddd;x_dddd;F\n";
 
-    // Display system parameters
-    std::cout << "=== SOLVING EQUATION (1) ===" << std::endl;
-    std::cout << "Method: Runge-Kutta 4th order" << std::endl;
-    std::cout << "Time interval: [" << t_start << ", " << t_end << "]" << std::endl;
-    std::cout << "Integration step: h = " << h << std::endl;
+    std::cout << "=== AIRCRAFT ENGINE CONTROL SYSTEM SIMULATION ===" << std::endl;
+    std::cout << "Method: 4th Order Runge-Kutta" << std::endl;
+    std::cout << "Time interval: [" << t_start << ", " << t_end << "] s" << std::endl;
+    std::cout << "Integration step: h = " << h << " s" << std::endl;
     std::cout << std::endl;
 
     EngineModel::printParameters();
-
-    std::cout << std::endl << "Calculating..." << std::endl;
-
-    // Налаштування точності виводу
+    std::cout << std::endl;
     file << std::fixed << std::setprecision(6);
 
     // ==========================================
-    // ОСНОВНИЙ ЦИКЛ ІНТЕГРУВАННЯ
+    // MAIN INTEGRATION LOOP
     // ==========================================
     int step_count = 0;
     for (double t = t_start; t <= t_end; t += h) {
 
-        // Отримуємо похідні в поточній точці
+        // Get derivatives at current point
         State derivatives = EngineModel::computeDerivatives(t, state);
 
-        // Поточний стан
-        double x_val     = state[0];        // x
-        double x_d_val   = state[1];        // x'
-        double x_dd_val  = state[2];        // x''
-        double x_ddd_val = state[3];        // x'''
-        double x_dddd_val = derivatives[3]; // x⁽⁴⁾
+        // Current system state
+        double x_val     = state[0];        // x - revolutions
+        double x_d_val   = state[1];        // x' - rate of change
+        double x_dd_val  = state[2];        // x'' - acceleration
+        double x_ddd_val = state[3];        // x''' - third derivative
+        double x_dddd_val = derivatives[3]; // x⁽⁴⁾ - fourth derivative
 
-        // Збурення
+        // Disturbance value
         double F_val = EngineModel::F(t);
 
-        // Запис у файл
+        // Write to file
         file << t << ";"
              << x_val << ";"
              << x_d_val << ";"
@@ -89,7 +78,7 @@ int main() {
              << x_dddd_val << ";"
              << F_val << "\n";
 
-        // Крок інтегрування методом Рунге-Кутта 4-го порядку
+        // Integration step using 4th order Runge-Kutta method
         state = RKSolver::step(t, state, h, EngineModel::computeDerivatives);
 
         step_count++;
@@ -97,14 +86,25 @@ int main() {
 
     file.close();
 
-    std::cout << "✓ Calculation completed!" << std::endl;
-    std::cout << "Number of steps: " << step_count << std::endl;
-    std::cout << "Results saved to file: simulation_results.csv" << std::endl;
+    std::cout << "Simulation completed successfully!" << std::endl;
+    std::cout << "  Number of steps: " << step_count << std::endl;
+    std::cout << "  Results saved to file: simulation_results.csv" << std::endl;
     std::cout << std::endl;
-    std::cout << "For results analysis you can:" << std::endl;
-    std::cout << "1. Open CSV file in Excel/LibreOffice" << std::endl;
-    std::cout << "2. Plot graphs x(t), x'(t), x''(t)" << std::endl;
-    std::cout << "3. Check system behavior under disturbance F(t)" << std::endl;
+    std::cout << "Final system state (t = " << t_end << " s):" << std::endl;
+    std::cout << "  x      = " << std::setprecision(4) << state[0] << " rev/s" << std::endl;
+    std::cout << "  x'     = " << std::setprecision(4) << state[1] << " rev/s²" << std::endl;
+    std::cout << "  F(t)   = " << std::setprecision(4) << EngineModel::F(t_end) << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "Starting results visualization..." << std::endl;
+    int viz_result = system("python visualize.py");
+
+    if (viz_result == 0) {
+        std::cout << "Visualization completed. Plots saved to file: simulation_results.png" << std::endl;
+    } else {
+        std::cout << "Could not start visualization automatically." << std::endl;
+        std::cout << "  Run manually: python3 visualize.py" << std::endl;
+    }
 
     return 0;
 }

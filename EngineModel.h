@@ -6,54 +6,53 @@
 class EngineModel {
 public:
     // ==========================================
-    // ПАРАМЕТРИ СИСТЕМИ з рівняння (1)
-    // 
-    // Рівняння (1):
-    // T·d⁴x/dt⁴ + (1 + r·T·k₂)·d³x/dt³ + T·k₁·k₂·k₃·d²x/dt² = 
+    // SYSTEM PARAMETERS from equation (1)
+    //
+    // Equation (1):
+    // T·d⁴x/dt⁴ + (1 + r·T·k₂)·d³x/dt³ + T·k₁·k₂·k₃·d²x/dt² =
     //     = k₁·T·d³F/dt³ + (k₁ + r·T·k₂)·d²F/dt²
     // ==========================================
 
-    // Постійна часу
+    // Time constant (seconds)
     static constexpr double T = 0.1;
-    
-    // Коефіцієнт зворотного зв'язку
+
+    // Feedback coefficient (dimensionless)
     static constexpr double r = 1.5;
-    
-    // Коефіцієнти передачі ланок системи
+
+    // Transfer coefficients (dimensionless)
     static constexpr double k1 = 2.0;
     static constexpr double k2 = 1.0;
     static constexpr double k3 = 0.5;
 
     // ==========================================
-    // ФУНКЦІЯ ЗБУРЕННЯ F(t) - ЗАВЖДИ ПОЗИТИВНЕ!
-    // 
-    // Фізична інтерпретація: подача палива в двигун
-    // F(t) > 0 завжди (не може бути від'ємною!)
+    // DISTURBANCE FUNCTION F(t) - ALWAYS POSITIVE!
     //
-    // Варіант 1: Експоненціальний імпульс (загасання)
-    // F(t) = F₀·exp(-α·t)  - "натискаємо газ, потім відпускаємо"
+    // Physical interpretation: fuel supply to engine
+    // F(t) > 0 always (cannot be negative!)
+    //
+    // Exponential decay pulse:
+    // F(t) = F₀·exp(-α·t)
     // ==========================================
-    
-    static constexpr double F0 = 10.0;    // Початкова подача палива
-    static constexpr double alpha = 0.3;  // Швидкість загасання
+
+    static constexpr double F0 = 10.0;    // Initial fuel supply
+    static constexpr double alpha = 0.3;  // Decay rate (1/s)
 
     static double F(double t) {
         if (t < 0) return 0.0;
-        // Експоненціальне загасання - завжди позитивне!
+        // Exponential decay - always positive
         return F0 * std::exp(-alpha * t);
     }
 
     // ==========================================
-    // ПОХІДНІ ЗБУРЕННЯ F(t)
-    // F(t) = F₀·e^(-α·t)
+    // DERIVATIVES OF DISTURBANCE F(t)
     //
-    // F'(t) = -α·F₀·e^(-α·t) = -α·F(t)
+    // For F(t) = F₀·e^(-α·t):
     //
-    // F''(t) = α²·F₀·e^(-α·t) = α²·F(t)
-    //
-    // F'''(t) = -α³·F₀·e^(-α·t) = -α³·F(t)
+    // F'(t)   = -α·F₀·e^(-α·t)     = -α·F(t)
+    // F''(t)  = α²·F₀·e^(-α·t)     = α²·F(t)
+    // F'''(t) = -α³·F₀·e^(-α·t)    = -α³·F(t)
     // ==========================================
-    
+
     static double F_first_derivative(double t) {
         return -alpha * F(t);
     }
@@ -67,55 +66,60 @@ public:
     }
 
     // ==========================================
-    // СИСТЕМА ДИФЕРЕНЦІАЛЬНИХ РІВНЯНЬ
-    // 
-    // Зводимо рівняння 4-го порядку до системи 1-го порядку:
-    // 
-    // y₀ = x        →  dy₀/dt = y₁
-    // y₁ = x'       →  dy₁/dt = y₂
-    // y₂ = x''      →  dy₂/dt = y₃
-    // y₃ = x'''     →  dy₃/dt = x⁽⁴⁾
+    // SYSTEM OF DIFFERENTIAL EQUATIONS
     //
-    // З рівняння (1) виражаємо x⁽⁴⁾:
-    // T·x⁽⁴⁾ = k₁·T·F⁽³⁾ + (k₁ + r·T·k₂)·F⁽²⁾ 
+    // Reducing 4th order equation to 1st order system:
+    //
+    // y₀ = x        →  dy₀/dt = y₁       (kinematics)
+    // y₁ = x'       →  dy₁/dt = y₂       (kinematics)
+    // y₂ = x''      →  dy₂/dt = y₃       (kinematics)
+    // y₃ = x'''     →  dy₃/dt = x⁽⁴⁾     (dynamics)
+    //
+    // From equation (1), expressing x⁽⁴⁾:
+    //
+    // T·x⁽⁴⁾ = k₁·T·F⁽³⁾ + (k₁ + r·T·k₂)·F⁽²⁾
     //          - (1 + r·T·k₂)·x⁽³⁾ - T·k₁·k₂·k₃·x⁽²⁾
     //
-    // x⁽⁴⁾ = [k₁·T·F⁽³⁾ + (k₁ + r·T·k₂)·F⁽²⁾ 
+    // x⁽⁴⁾ = [k₁·T·F⁽³⁾ + (k₁ + r·T·k₂)·F⁽²⁾
     //         - (1 + r·T·k₂)·x⁽³⁾ - T·k₁·k₂·k₃·x⁽²⁾] / T
     // ==========================================
     static State computeDerivatives(double t, const State& current_state) {
         State dydt;
 
-        // Розпакування вектора стану
-        // double x         = current_state[0];  // не потрібно для обчислення
-        // double x_prime   = current_state[1];  // не потрібно для обчислення
-        double x_double  = current_state[2];  // x''  (друга похідна)
-        double x_triple  = current_state[3];  // x''' (третя похідна)
+        // Unpacking state vector
+        // current_state[0] = x      (position)
+        // current_state[1] = x'     (velocity)
+        // current_state[2] = x''    (acceleration)
+        // current_state[3] = x'''   (third derivative)
 
-        // --- Кінематичні зв'язки (зниження порядку) ---
+        double x_double  = current_state[2];  // x''  (second derivative)
+        double x_triple  = current_state[3];  // x''' (third derivative)
+
+        // Kinematic relations (order reduction)
         dydt[0] = current_state[1];  // dx/dt = x'
         dydt[1] = current_state[2];  // d(x')/dt = x''
         dydt[2] = current_state[3];  // d(x'')/dt = x'''
 
-        // --- Динаміка (з рівняння 1) ---
-        // Отримуємо похідні збурення
+        // Dynamics (from equation 1)
+        // Get disturbance derivatives at current time
         double F_dd = F_second_derivative(t);   // d²F/dt²
         double F_ddd = F_third_derivative(t);   // d³F/dt³
 
-        // Обчислюємо коефіцієнти
-        double coef_x_triple = (1.0 + r * T * k2);     // Коефіцієнт при x'''
-        double coef_x_double = T * k1 * k2 * k3;        // Коефіцієнт при x''
-        double coef_F_dd = (k1 + r * T * k2);           // Коефіцієнт при F''
-        double coef_F_ddd = k1 * T;                     // Коефіцієнт при F'''
+        // Calculate coefficients from equation (1)
+        double coef_x_triple = (1.0 + r * T * k2);     // Coefficient at x'''
+        double coef_x_double = T * k1 * k2 * k3;        // Coefficient at x''
+        double coef_F_dd = (k1 + r * T * k2);           // Coefficient at F''
+        double coef_F_ddd = k1 * T;                     // Coefficient at F'''
 
-        // Перевірка на сингулярність
-        if (T == 0.0) {
+        // Check for singularity (T cannot be zero)
+        if (std::abs(T) < 1e-10) {
             throw std::runtime_error("T cannot be zero (singular system).");
         }
 
-        // Обчислюємо x⁽⁴⁾ з рівняння (1)
-        double x_fourth = (coef_F_ddd * F_ddd + coef_F_dd * F_dd 
-                          - coef_x_triple * x_triple 
+        // Calculate x⁽⁴⁾ from equation (1)
+        // x⁽⁴⁾ = [k₁·T·F⁽³⁾ + (k₁ + r·T·k₂)·F⁽²⁾ - (1 + r·T·k₂)·x⁽³⁾ - T·k₁·k₂·k₃·x⁽²⁾] / T
+        double x_fourth = (coef_F_ddd * F_ddd + coef_F_dd * F_dd
+                          - coef_x_triple * x_triple
                           - coef_x_double * x_double) / T;
 
         dydt[3] = x_fourth;  // d(x''')/dt = x⁽⁴⁾
@@ -124,11 +128,10 @@ public:
     }
 
     // ==========================================
-    // ДОПОМІЖНІ ФУНКЦІЇ для аналізу
+    // HELPER FUNCTIONS for analysis
     // ==========================================
-    
-    // Обчислення позначень з рівняння (2) для діагностики
-    // (якщо знадобиться для розширеного завдання)
+
+    // Calculate coefficients from notation (2) for diagnostics
     static double compute_C1() {
         return T * k1 * k2 * k3;
     }
@@ -141,19 +144,23 @@ public:
         return T;
     }
 
-    // Вивід параметрів системи
+    // Print system parameters
     static void printParameters() {
-        std::cout << "=== Параметри САР ===" << std::endl;
-        std::cout << "T  = " << T << " (постійна часу)" << std::endl;
-        std::cout << "r  = " << r << " (коефіцієнт зворотного зв'язку)" << std::endl;
-        std::cout << "k1 = " << k1 << " (коефіцієнт передачі 1)" << std::endl;
-        std::cout << "k2 = " << k2 << " (коефіцієнт передачі 2)" << std::endl;
-        std::cout << "k3 = " << k3 << " (коефіцієнт передачі 3)" << std::endl;
+        std::cout << "=== System Parameters ===" << std::endl;
+        std::cout << "T  = " << T << " (time constant, s)" << std::endl;
+        std::cout << "r  = " << r << " (feedback coefficient)" << std::endl;
+        std::cout << "k1 = " << k1 << " (transfer coefficient 1)" << std::endl;
+        std::cout << "k2 = " << k2 << " (transfer coefficient 2)" << std::endl;
+        std::cout << "k3 = " << k3 << " (transfer coefficient 3)" << std::endl;
         std::cout << std::endl;
-        std::cout << "Коефіцієнти в позначеннях (2):" << std::endl;
+        std::cout << "Disturbance F(t):" << std::endl;
+        std::cout << "F₀ = " << F0 << " (initial value)" << std::endl;
+        std::cout << "α  = " << alpha << " (decay coefficient, 1/s)" << std::endl;
+        std::cout << std::endl;
+        std::cout << "Coefficients in notation (2):" << std::endl;
         std::cout << "C1 = " << compute_C1() << std::endl;
         std::cout << "C2 = " << compute_C2() << std::endl;
         std::cout << "C3 = " << compute_C3() << std::endl;
-        std::cout << "=====================" << std::endl;
+        std::cout << "=========================" << std::endl;
     }
 };
