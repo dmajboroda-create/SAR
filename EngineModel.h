@@ -2,6 +2,7 @@
 #include "Types.h"
 #include <cmath>
 #include <stdexcept>
+#include <iostream>
 
 class EngineModel {
 public:
@@ -9,20 +10,20 @@ public:
     // SYSTEM PARAMETERS from equation (1)
     //
     // Equation (1):
-    // T·d⁴x/dt⁴ + (1 + r·T·k₂)·d³x/dt³ + T·k₁·k₂·k₃·d²x/dt² =
-    //     = k₁·T·d³F/dt³ + (k₁ + r·T·k₂)·d²F/dt²
+    // T*d^4x/dt^4 + (1 + r*T*k2)*d^3x/dt^3 + T*k1*k2*k3*d^2x/dt^2 =
+    //     = k1*T*d^3F/dt^3 + (k1 + r*T*k2)*d^2F/dt^2
     // ==========================================
 
     // Time constant (seconds)
-    static constexpr double T = 0.1;
+    static double T;
 
     // Feedback coefficient (dimensionless)
-    static constexpr double r = 1.5;
+    static double r;
 
     // Transfer coefficients (dimensionless)
-    static constexpr double k1 = 2.0;
-    static constexpr double k2 = 1.0;
-    static constexpr double k3 = 0.5;
+    static double k1;
+    static double k2;
+    static double k3;
 
     // ==========================================
     // DISTURBANCE FUNCTION F(t) - ALWAYS POSITIVE!
@@ -31,11 +32,11 @@ public:
     // F(t) > 0 always (cannot be negative!)
     //
     // Exponential decay pulse:
-    // F(t) = F₀·exp(-α·t)
+    // F(t) = F0*exp(-alpha*t)
     // ==========================================
 
-    static constexpr double F0 = 10.0;    // Initial fuel supply
-    static constexpr double alpha = 0.3;  // Decay rate (1/s)
+    static double F0;    // Initial fuel supply
+    static double alpha;  // Decay rate (1/s)
 
     static double F(double t) {
         if (t < 0) return 0.0;
@@ -46,11 +47,11 @@ public:
     // ==========================================
     // DERIVATIVES OF DISTURBANCE F(t)
     //
-    // For F(t) = F₀·e^(-α·t):
+    // For F(t) = F0*e^(-alpha*t):
     //
-    // F'(t)   = -α·F₀·e^(-α·t)     = -α·F(t)
-    // F''(t)  = α²·F₀·e^(-α·t)     = α²·F(t)
-    // F'''(t) = -α³·F₀·e^(-α·t)    = -α³·F(t)
+    // F'(t)   = -alpha*F0*e^(-alpha*t)     = -alpha*F(t)
+    // F''(t)  = alpha^2*F0*e^(-alpha*t)    = alpha^2*F(t)
+    // F'''(t) = -alpha^3*F0*e^(-alpha*t)   = -alpha^3*F(t)
     // ==========================================
 
     static double F_first_derivative(double t) {
@@ -70,18 +71,18 @@ public:
     //
     // Reducing 4th order equation to 1st order system:
     //
-    // y₀ = x        →  dy₀/dt = y₁       (kinematics)
-    // y₁ = x'       →  dy₁/dt = y₂       (kinematics)
-    // y₂ = x''      →  dy₂/dt = y₃       (kinematics)
-    // y₃ = x'''     →  dy₃/dt = x⁽⁴⁾     (dynamics)
+    // y0 = x        ->  dy0/dt = y1       (kinematics)
+    // y1 = x'       ->  dy1/dt = y2       (kinematics)
+    // y2 = x''      ->  dy2/dt = y3       (kinematics)
+    // y3 = x'''     ->  dy3/dt = x(4)     (dynamics)
     //
-    // From equation (1), expressing x⁽⁴⁾:
+    // From equation (1), expressing x(4):
     //
-    // T·x⁽⁴⁾ = k₁·T·F⁽³⁾ + (k₁ + r·T·k₂)·F⁽²⁾
-    //          - (1 + r·T·k₂)·x⁽³⁾ - T·k₁·k₂·k₃·x⁽²⁾
+    // T*x(4) = k1*T*F''' + (k1 + r*T*k2)*F''
+    //          - (1 + r*T*k2)*x''' - T*k1*k2*k3*x''
     //
-    // x⁽⁴⁾ = [k₁·T·F⁽³⁾ + (k₁ + r·T·k₂)·F⁽²⁾
-    //         - (1 + r·T·k₂)·x⁽³⁾ - T·k₁·k₂·k₃·x⁽²⁾] / T
+    // x(4) = [k1*T*F''' + (k1 + r*T*k2)*F''
+    //         - (1 + r*T*k2)*x''' - T*k1*k2*k3*x''] / T
     // ==========================================
     static State computeDerivatives(double t, const State& current_state) {
         State dydt;
@@ -102,8 +103,8 @@ public:
 
         // Dynamics (from equation 1)
         // Get disturbance derivatives at current time
-        double F_dd = F_second_derivative(t);   // d²F/dt²
-        double F_ddd = F_third_derivative(t);   // d³F/dt³
+        double F_dd = F_second_derivative(t);   // d^2F/dt^2
+        double F_ddd = F_third_derivative(t);   // d^3F/dt^3
 
         // Calculate coefficients from equation (1)
         double coef_x_triple = (1.0 + r * T * k2);     // Coefficient at x'''
@@ -116,13 +117,13 @@ public:
             throw std::runtime_error("T cannot be zero (singular system).");
         }
 
-        // Calculate x⁽⁴⁾ from equation (1)
-        // x⁽⁴⁾ = [k₁·T·F⁽³⁾ + (k₁ + r·T·k₂)·F⁽²⁾ - (1 + r·T·k₂)·x⁽³⁾ - T·k₁·k₂·k₃·x⁽²⁾] / T
+        // Calculate x(4) from equation (1)
+        // x(4) = [k1*T*F''' + (k1 + r*T*k2)*F'' - (1 + r*T*k2)*x''' - T*k1*k2*k3*x''] / T
         double x_fourth = (coef_F_ddd * F_ddd + coef_F_dd * F_dd
                           - coef_x_triple * x_triple
                           - coef_x_double * x_double) / T;
 
-        dydt[3] = x_fourth;  // d(x''')/dt = x⁽⁴⁾
+        dydt[3] = x_fourth;  // d(x''')/dt = x(4)
 
         return dydt;
     }
@@ -154,8 +155,8 @@ public:
         std::cout << "k3 = " << k3 << " (transfer coefficient 3)" << std::endl;
         std::cout << std::endl;
         std::cout << "Disturbance F(t):" << std::endl;
-        std::cout << "F₀ = " << F0 << " (initial value)" << std::endl;
-        std::cout << "α  = " << alpha << " (decay coefficient, 1/s)" << std::endl;
+        std::cout << "F0    = " << F0 << " (initial value)" << std::endl;
+        std::cout << "alpha = " << alpha << " (decay coefficient, 1/s)" << std::endl;
         std::cout << std::endl;
         std::cout << "Coefficients in notation (2):" << std::endl;
         std::cout << "C1 = " << compute_C1() << std::endl;
@@ -164,3 +165,12 @@ public:
         std::cout << "=========================" << std::endl;
     }
 };
+
+// Initialize static members
+double EngineModel::T = 0.0;
+double EngineModel::r = 0.0;
+double EngineModel::k1 = 0.0;
+double EngineModel::k2 = 0.0;
+double EngineModel::k3 = 0.0;
+double EngineModel::F0 = 0.0;
+double EngineModel::alpha = 0.0;

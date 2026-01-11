@@ -11,7 +11,7 @@ def main():
     # Check input file existence
     input_file = 'simulation_results.csv'
     if not os.path.exists(input_file):
-        print(f"✗ Error: File '{input_file}' not found!")
+        print(f"[ERROR] File '{input_file}' not found!")
         print("   Run the simulation program first.")
         sys.exit(1)
 
@@ -27,19 +27,19 @@ def main():
         missing_columns = [col for col in required_columns if col not in df.columns]
 
         if missing_columns:
-            print(f"✗ Error: Missing columns in file: {missing_columns}")
+            print(f"[ERROR] Missing columns in file: {missing_columns}")
             print(f"   Available columns: {df.columns.tolist()}")
             sys.exit(1)
 
-        print(f"✓ Loaded {len(df)} data points")
+        print(f"[OK] Loaded {len(df)} data points")
 
     except Exception as e:
-        print(f"✗ Error reading file: {e}")
+        print(f"[ERROR] Error reading file: {e}")
         sys.exit(1)
 
     try:
         # Create figure with subplots
-        fig, axes = plt.subplots(3, 2, figsize=(14, 10))
+        fig, axes = plt.subplots(3, 2, figsize=(16, 12))
         fig.suptitle('Solution of Equation (1) for Aircraft Engine Control System\n4th Order Runge-Kutta Method',
                      fontsize=14, fontweight='bold')
 
@@ -53,21 +53,21 @@ def main():
         # Plot 2: x'(t) - rate of change of revolutions
         axes[0, 1].plot(df['t'], df['x_d'], 'g-', linewidth=1.5)
         axes[0, 1].set_xlabel('Time t (s)', fontsize=10)
-        axes[0, 1].set_ylabel('x\'(t) (rev/s²)', fontsize=10)
+        axes[0, 1].set_ylabel('x\'(t) (rev/s^2)', fontsize=10)
         axes[0, 1].set_title('First Derivative (Rate of Change)')
         axes[0, 1].grid(True, alpha=0.3)
 
         # Plot 3: x''(t) - acceleration
         axes[1, 0].plot(df['t'], df['x_dd'], 'r-', linewidth=1.5)
         axes[1, 0].set_xlabel('Time t (s)', fontsize=10)
-        axes[1, 0].set_ylabel('x\'\'(t) (rev/s³)', fontsize=10)
+        axes[1, 0].set_ylabel('x\'\'(t) (rev/s^3)', fontsize=10)
         axes[1, 0].set_title('Second Derivative (Acceleration)')
         axes[1, 0].grid(True, alpha=0.3)
 
         # Plot 4: x'''(t) - third derivative
         axes[1, 1].plot(df['t'], df['x_ddd'], 'm-', linewidth=1.5)
         axes[1, 1].set_xlabel('Time t (s)', fontsize=10)
-        axes[1, 1].set_ylabel('x\'\'\'(t) (rev/s⁴)', fontsize=10)
+        axes[1, 1].set_ylabel('x\'\'\'(t) (rev/s^4)', fontsize=10)
         axes[1, 1].set_title('Third Derivative')
         axes[1, 1].grid(True, alpha=0.3)
 
@@ -103,7 +103,7 @@ def main():
         # Save plots
         output_path = 'simulation_results.png'
         plt.savefig(output_path, dpi=150, bbox_inches='tight')
-        print(f"✓ Plots saved to file: {output_path}")
+        print(f"[OK] Plots saved to file: {output_path}")
 
         # Statistics
         print("\n=== SOLUTION STATISTICS ===")
@@ -123,7 +123,7 @@ def main():
         return 0
 
     except Exception as e:
-        print(f"✗ Error creating plots: {e}")
+        print(f"[ERROR] Error creating plots: {e}")
         import traceback
         traceback.print_exc()
         return 1
