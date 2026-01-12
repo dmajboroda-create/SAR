@@ -1,11 +1,15 @@
-﻿# CLion
-.idea/
-cmake-build-debug/
-cmake-build-release/
-
-# Build files
+﻿# Build directories
 build/
+cmake-build-*/
 out/
+
+# IDE settings
+.idea/
+.vs/
+.vscode/
+*.swp
+*.swo
+*~
 
 # Compiled files
 *.exe
@@ -13,20 +17,27 @@ out/
 *.obj
 *.a
 *.lib
+*.dll
+*.so
+*.dylib
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
 
 # CMake
 CMakeCache.txt
 CMakeFiles/
-Makefile
 cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
 
-# Test results
+# Google Test
+googletest-*/
 Testing/
-*.gcov
-*.gcda
-*.gcno
 
-# Visual Studio
-.vs/
-*.user
-*.suo
+# Documentation drafts
+*.docx~
+*.tmp
