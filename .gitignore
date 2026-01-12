@@ -21,6 +21,22 @@ out/
 *.so
 *.dylib
 
+# Results and outputs
+simulation_results.csv
+simulation_results.png
+*.csv
+*.png
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+dist/
+venv/
+.env
+
 # OS files
 .DS_Store
 Thumbs.db
