@@ -1,6 +1,0 @@
-============================================
-CPPCHECK ANALYSIS REPORT
-============================================
-Date: 13.01.2026  9:26:15,73
-
-nofile:0: [information] checkersReport: Active checkers: 183/975 (use --checkers-report=<filename> to see details)
