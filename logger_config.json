@@ -1,0 +1,9 @@
+{
+  "log_level": "debug",
+  "log_file": "logs/sar_simulation.log",
+  "log_to_console": true,
+  "log_to_file": true,
+  "max_file_size_mb": 10,
+  "max_files": 5,
+  "pattern": "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%s:%#] %v"
+}

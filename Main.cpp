@@ -1,21 +1,12 @@
 /**
  * @file Main.cpp
- * @brief Головна програма моделювання системи автоматичного регулювання авіаційного двигуна.
+ * @brief Головна програма моделювання CAP авіаційного двигуна з логуванням.
  *
- * Реалізує консольний інтерфейс для введення параметрів системи,
- * цикл чисельного інтегрування методом Рунге-Кутта 4-го порядку
- * та експорт результатів у CSV-формат з автоматичною візуалізацією.
+ * Логування реалізовано через spdlog з двома обробниками:
+ * - Console sink: кольоровий вивід у термінал
+ * - Rotating file sink: файл logs/sar_simulation.log (ротація 10 MB, 5 архівів)
  *
- * ## Порядок роботи програми:
- * 1. Введення параметрів системи (T, r, k1, k2, k3, F0, alpha)
- * 2. Введення параметрів симуляції (t_start, t_end, h)
- * 3. Чисельне інтегрування методом RK4
- * 4. Збереження результатів у simulation_results.csv
- * 5. Автоматичний запуск visualize.py для побудови графіків
- *
- * @author Мажборода Д. М.
- * @date 2025
- * @see EngineModel, RKSolver
+ * Рівень логування визначається з logger_config.json без перекомпіляції.
  */
 
 #include <iostream>
@@ -24,26 +15,15 @@
 #include <string>
 #include <sstream>
 #include <limits>
+#include <stdexcept>
 
 #include "Types.h"
 #include "EngineModel.h"
 #include "RungeKutta.h"
+#include "Logger.h"
 
-/**
- * @brief Зчитує дійсне число з введення користувача з підтримкою значення за замовчуванням.
- *
- * Якщо користувач натискає Enter без введення значення — повертає defaultValue.
- * Якщо введене значення виходить за межі [minValue, maxValue] — також повертає defaultValue.
- * Якщо введення не є числом — повертає defaultValue.
- *
- * @param prompt       Рядок запиту, що виводиться користувачу
- * @param defaultValue Значення за замовчуванням (при порожньому введенні)
- * @param minValue     Мінімально допустиме значення (за замовчуванням -inf)
- * @param maxValue     Максимально допустиме значення (за замовчуванням +inf)
- * @return             Введене користувачем значення або defaultValue
- *
- * @note Функція не кидає виняток — при будь-якій помилці повертає defaultValue.
- */
+#include <spdlog/spdlog.h>
+
 double readDoubleWithDefault(const std::string& prompt, double defaultValue,
                              double minValue = -std::numeric_limits<double>::infinity(),
                              double maxValue =  std::numeric_limits<double>::infinity()) {
@@ -52,6 +32,7 @@ double readDoubleWithDefault(const std::string& prompt, double defaultValue,
     std::getline(std::cin, input);
 
     if (input.empty()) {
+        spdlog::debug("Parameter input empty, using default value: {}", defaultValue);
         return defaultValue;
     }
 
@@ -60,32 +41,41 @@ double readDoubleWithDefault(const std::string& prompt, double defaultValue,
 
     if (ss >> value && ss.eof()) {
         if (value >= minValue && value <= maxValue) {
+            spdlog::debug("Parameter entered: {}", value);
             return value;
+        } else {
+            spdlog::warn("Value {} out of range [{}, {}], using default: {}",
+                         value, minValue, maxValue, defaultValue);
         }
+    } else {
+        spdlog::warn("Failed to parse input '{}', using default: {}", input, defaultValue);
     }
 
     return defaultValue;
 }
 
-/**
- * @brief Точка входу програми моделювання CAP авіаційного двигуна.
- *
- * Виконує повний цикл моделювання:
- * - зчитує параметри системи та симуляції від користувача;
- * - запускає чисельне інтегрування методом RK4;
- * - зберігає результати (t, x, x', x'', x''', x^(4), F) у CSV;
- * - запускає Python-скрипт visualize.py для побудови графіків.
- *
- * @return 0 при успішному завершенні, 1 при помилці відкриття файлу.
- */
 int main() {
+    // ==========================================
+    // ІНІЦІАЛІЗАЦІЯ ЛОГЕРА
+    // Рівень визначається з logger_config.json — без перекомпіляції!
+    // ==========================================
+    try {
+        initLogger("logger_config.json");
+    } catch (const std::exception& ex) {
+        std::cerr << "[WARN] Logger init failed: " << ex.what() << ". Using defaults.\n";
+    }
+
+    spdlog::info("=== SAR Simulation started ===");
+    spdlog::info("Method: 4th Order Runge-Kutta");
+
     std::cout << "=== AIRCRAFT ENGINE CONTROL SYSTEM SIMULATION ===" << '\n';
     std::cout << "Method: 4th Order Runge-Kutta" << '\n';
     std::cout << '\n';
 
     // ==========================================
-    // INPUT SYSTEM PARAMETERS
+    // ВВЕДЕННЯ ПАРАМЕТРІВ СИСТЕМИ
     // ==========================================
+    spdlog::info("Reading system parameters from user input");
     std::cout << "Enter system parameters (press Enter for default values):" << '\n';
     std::cout << '\n';
 
@@ -109,9 +99,6 @@ int main() {
         "Transfer coefficient k3 [default: 0.5]: ",
         0.5, -1000.0, 1000.0);
 
-    std::cout << '\n';
-    std::cout << "Disturbance parameters F(t) = F0*exp(-alpha*t):" << '\n';
-
     EngineModel::F0 = readDoubleWithDefault(
         "Initial disturbance F0 [default: 10.0]: ",
         10.0, 0.0, 1e6);
@@ -120,13 +107,9 @@ int main() {
         "Decay coefficient alpha (1/s) [default: 0.3]: ",
         0.3, 0.0, 1000.0);
 
-    std::cout << '\n';
-
-    // ==========================================
-    // INPUT SIMULATION PARAMETERS
-    // ==========================================
-    std::cout << "Enter simulation parameters:" << '\n';
-    std::cout << '\n';
+    spdlog::info("System parameters: T={}, r={}, k1={}, k2={}, k3={}, F0={}, alpha={}",
+                 EngineModel::T, EngineModel::r, EngineModel::k1,
+                 EngineModel::k2, EngineModel::k3, EngineModel::F0, EngineModel::alpha);
 
     double t_start = readDoubleWithDefault(
         "Start time t_start (s) [default: 0.0]: ",
@@ -140,60 +123,82 @@ int main() {
         "Integration step h (s) [default: 0.01]: ",
         0.01, 1e-6, (t_end - t_start) / 10.0);
 
-    std::cout << '\n';
+    spdlog::info("Simulation parameters: t=[{}, {}], h={}", t_start, t_end, h);
 
     // ==========================================
-    // INITIAL CONDITIONS
+    // ПОЧАТКОВІ УМОВИ
     // ==========================================
     State state = {0.0, 0.0, 0.0, 0.0};
+    spdlog::debug("Initial state: x=0, x'=0, x''=0, x'''=0");
 
     // ==========================================
-    // OPEN OUTPUT FILE
+    // ВІДКРИТТЯ ФАЙЛУ ВИВОДУ
     // ==========================================
     std::ofstream file("simulation_results.csv");
     if (!file.is_open()) {
+        // ERR-001: помилка відкриття файлу
+        spdlog::error("[ERR-001] Cannot create output file 'simulation_results.csv'. "
+                      "Check write permissions in current directory.");
         std::cerr << "Error: Cannot create output file 'simulation_results.csv'" << '\n';
         return 1;
     }
+    spdlog::info("Output file 'simulation_results.csv' opened successfully");
 
     file << "t;x;x_d;x_dd;x_ddd;x_dddd;F\n";
 
-    std::cout << "Time interval: [" << t_start << ", " << t_end << "] s" << '\n';
-    std::cout << "Integration step: h = " << h << " s" << '\n';
-    std::cout << '\n';
-
     EngineModel::printParameters();
-    std::cout << '\n';
     file << std::fixed << std::setprecision(6);
 
     // ==========================================
-    // MAIN INTEGRATION LOOP
+    // ГОЛОВНИЙ ЦИКЛ ІНТЕГРУВАННЯ
     // ==========================================
+    spdlog::info("Starting integration loop: {} steps expected",
+                 static_cast<int>((t_end - t_start) / h));
+
     int step_count = 0;
-    for (double t = t_start; t <= t_end; t += h) {
+    try {
+        for (double t = t_start; t <= t_end; t += h) {
 
-        State derivatives = EngineModel::computeDerivatives(t, state);
+            State derivatives = EngineModel::computeDerivatives(t, state);
 
-        double x_val      = state[0];
-        double x_d_val    = state[1];
-        double x_dd_val   = state[2];
-        double x_ddd_val  = state[3];
-        double x_dddd_val = derivatives[3];
-        double F_val      = EngineModel::F(t);
+            double x_val      = state[0];
+            double x_d_val    = state[1];
+            double x_dd_val   = state[2];
+            double x_ddd_val  = state[3];
+            double x_dddd_val = derivatives[3];
+            double F_val      = EngineModel::F(t);
 
-        file << t         << ";"
-             << x_val     << ";"
-             << x_d_val   << ";"
-             << x_dd_val  << ";"
-             << x_ddd_val << ";"
-             << x_dddd_val << ";"
-             << F_val     << "\n";
+            file << t          << ";"
+                 << x_val      << ";"
+                 << x_d_val    << ";"
+                 << x_dd_val   << ";"
+                 << x_ddd_val  << ";"
+                 << x_dddd_val << ";"
+                 << F_val      << "\n";
 
-        state = RKSolver::step(t, state, h, EngineModel::computeDerivatives);
-        step_count++;
+            spdlog::debug("Step {}: t={:.4f}, x={:.6f}, F={:.6f}",
+                          step_count, t, x_val, F_val);
+
+            state = RKSolver::step(t, state, h, EngineModel::computeDerivatives);
+            step_count++;
+        }
+    } catch (const std::runtime_error& ex) {
+        // ERR-002: сингулярна система (T == 0)
+        spdlog::critical("[ERR-002] Singular system detected at step {}: {}. "
+                         "Check parameter T (must be > 0).", step_count, ex.what());
+        file.close();
+        return 1;
+    } catch (const std::exception& ex) {
+        // ERR-003: непередбачена помилка під час інтегрування
+        spdlog::error("[ERR-003] Unexpected error at step {}: {}", step_count, ex.what());
+        file.close();
+        return 1;
     }
 
     file.close();
+
+    spdlog::info("Integration completed: {} steps, results saved to simulation_results.csv",
+                 step_count);
 
     std::cout << "Simulation completed successfully!" << '\n';
     std::cout << "  Number of steps: " << step_count << '\n';
@@ -203,17 +208,29 @@ int main() {
     std::cout << "  x   = " << std::setprecision(4) << state[0] << " rev/s" << '\n';
     std::cout << "  x'  = " << std::setprecision(4) << state[1] << " rev/s^2" << '\n';
     std::cout << "  F(t) = " << std::setprecision(4) << EngineModel::F(t_end) << '\n';
-    std::cout << '\n';
 
-    std::cout << "Starting results visualization..." << '\n';
+    spdlog::info("Final state: x={:.4f} rev/s, x'={:.4f} rev/s^2, F(t_end)={:.4f}",
+                 state[0], state[1], EngineModel::F(t_end));
+
+    // ==========================================
+    // ВІЗУАЛІЗАЦІЯ
+    // ==========================================
+    spdlog::info("Starting visualization: python visualize.py");
     int viz_result = system("python visualize.py");
 
     if (viz_result == 0) {
+        spdlog::info("Visualization completed, saved to simulation_results.png");
         std::cout << "Visualization completed. Plots saved to file: simulation_results.png" << '\n';
     } else {
+        // ERR-004: помилка запуску візуалізації
+        spdlog::warn("[ERR-004] Visualization failed (exit code {}). "
+                     "Run manually: python3 visualize.py", viz_result);
         std::cout << "Could not start visualization automatically." << '\n';
         std::cout << "  Run manually: python3 visualize.py" << '\n';
     }
+
+    spdlog::info("=== SAR Simulation finished ===");
+    spdlog::shutdown();
 
     return 0;
 }

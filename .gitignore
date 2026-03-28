@@ -57,3 +57,8 @@ Testing/
 # Documentation drafts
 *.docx~
 *.tmp
+docs/code/
+docs/latex/
+latex/
+sast_reports/
+docs_SAR.zip

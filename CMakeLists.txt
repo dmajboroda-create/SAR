@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 3.14)
 project(SAR)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# ==========================================
+# SPDLOG — система логування
+# ==========================================
+find_package(spdlog REQUIRED)
 
 # ==========================================
 # ОСНОВНА ПРОГРАМА МОДЕЛЮВАННЯ
@@ -13,6 +18,11 @@ add_executable(engine_simulation
         EngineModel.h
         RungeKutta.h
         Types.h
+        Logger.h
+)
+
+target_link_libraries(engine_simulation
+        spdlog::spdlog
 )
 
 # ==========================================
