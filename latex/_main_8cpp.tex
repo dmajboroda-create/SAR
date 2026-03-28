@@ -1,0 +1,102 @@
+\doxysection{Main.\+cpp File Reference}
+\hypertarget{_main_8cpp}{}\label{_main_8cpp}\index{Main.cpp@{Main.cpp}}
+
+
+Головна програма моделювання системи автоматичного регулювання авіаційного двигуна.  
+
+
+{\ttfamily \+\#include $<$iostream$>$}\newline
+{\ttfamily \+\#include $<$fstream$>$}\newline
+{\ttfamily \+\#include $<$iomanip$>$}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$sstream$>$}\newline
+{\ttfamily \+\#include $<$limits$>$}\newline
+{\ttfamily \+\#include "{}Types.\+h"{}}\newline
+{\ttfamily \+\#include "{}Engine\+Model.\+h"{}}\newline
+{\ttfamily \+\#include "{}Runge\+Kutta.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \doxymbox{\hyperlink{_main_8cpp_ae2fe1c6dd85c81d0c32652f205d74bb1}{read\+Double\+With\+Default}} (const std::\+string \&prompt, double default\+Value, double min\+Value=-\/std::\+numeric\+\_\+limits$<$ double $>$::\+infinity(), double max\+Value=std::\+numeric\+\_\+limits$<$ double $>$::\+infinity())
+\begin{DoxyCompactList}\small\item\em Зчитує дійсне число з введення користувача з підтримкою значення за замовчуванням. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{_main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\begin{DoxyCompactList}\small\item\em Точка входу програми моделювання CAP авіаційного двигуна. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Головна програма моделювання системи автоматичного регулювання авіаційного двигуна. 
+
+Реалізує консольний інтерфейс для введення параметрів системи, цикл чисельного інтегрування методом Рунге-\/Кутта 4-\/го порядку та експорт результатів у CSV-\/формат з автоматичною візуалізацією.\hypertarget{_main_8cpp_autotoc_md0}{}\doxysubsubsection{\texorpdfstring{Порядок роботи програми:\+}{Порядок роботи програми:\+}}\label{_main_8cpp_autotoc_md0}
+
+\begin{DoxyEnumerate}
+\item Введення параметрів системи (T, r, k1, k2, k3, F0, alpha)
+\item Введення параметрів симуляції (t\+\_\+start, t\+\_\+end, h)
+\item Чисельне інтегрування методом RK4
+\item Збереження результатів у simulation\+\_\+results.\+csv
+\item Автоматичний запуск visualize.\+py для побудови графіків
+\end{DoxyEnumerate}
+
+\begin{DoxyAuthor}{Author}
+Мажборода Д. М. 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2025 
+\end{DoxyDate}
+\begin{DoxySeeAlso}{See also}
+\doxylink{class_engine_model}{Engine\+Model}, \doxylink{class_r_k_solver}{RKSolver} 
+\end{DoxySeeAlso}
+
+
+\label{doc-func-members}
+\Hypertarget{_main_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\index{Main.cpp@{Main.cpp}!main@{main}}
+\index{main@{main}!Main.cpp@{Main.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{_main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4} 
+int main (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Точка входу програми моделювання CAP авіаційного двигуна. 
+
+Виконує повний цикл моделювання:\+
+\begin{DoxyItemize}
+\item зчитує параметри системи та симуляції від користувача;
+\item запускає чисельне інтегрування методом RK4;
+\item зберігає результати (t, x, x\textquotesingle{}, x\textquotesingle{}\textquotesingle{}, x\textquotesingle{}\textquotesingle{}\textquotesingle{}, x\texorpdfstring{$^\wedge$}{\string^}(4), F) у CSV;
+\item запускає Python-\/скрипт visualize.\+py для побудови графіків.
+\end{DoxyItemize}
+
+\begin{DoxyReturn}{Returns}
+0 при успішному завершенні, 1 при помилці відкриття файлу. 
+\end{DoxyReturn}
+\Hypertarget{_main_8cpp_ae2fe1c6dd85c81d0c32652f205d74bb1}\index{Main.cpp@{Main.cpp}!readDoubleWithDefault@{readDoubleWithDefault}}
+\index{readDoubleWithDefault@{readDoubleWithDefault}!Main.cpp@{Main.cpp}}
+\doxysubsubsection{\texorpdfstring{readDoubleWithDefault()}{readDoubleWithDefault()}}
+{\footnotesize\ttfamily \label{_main_8cpp_ae2fe1c6dd85c81d0c32652f205d74bb1} 
+double read\+Double\+With\+Default (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{prompt}{, }\item[{double}]{default\+Value}{, }\item[{double}]{min\+Value}{ = {\ttfamily -\/std:\+:\+numeric\+\_\+limits$<$double$>$:\+:\+infinity()}, }\item[{double}]{max\+Value}{ = {\ttfamily std:\+:\+numeric\+\_\+limits$<$double$>$:\+:\+infinity()}}\end{DoxyParamCaption})}
+
+
+
+Зчитує дійсне число з введення користувача з підтримкою значення за замовчуванням. 
+
+Якщо користувач натискає Enter без введення значення — повертає default\+Value. Якщо введене значення виходить за межі \+[min\+Value, max\+Value]\+ — також повертає default\+Value. Якщо введення не є числом — повертає default\+Value.
+
+
+\begin{DoxyParams}{Parameters}
+{\em prompt} & Рядок запиту, що виводиться користувачу \\
+\hline
+{\em default\+Value} & Значення за замовчуванням (при порожньому введенні) \\
+\hline
+{\em min\+Value} & Мінімально допустиме значення (за замовчуванням -\/inf) \\
+\hline
+{\em max\+Value} & Максимально допустиме значення (за замовчуванням +inf) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Введене користувачем значення або default\+Value
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Функція не кидає виняток — при будь-\/якій помилці повертає default\+Value. 
+\end{DoxyNote}

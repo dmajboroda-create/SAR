@@ -1,0 +1,22 @@
+@"
+PROJECT_NAME           = "SAR"
+PROJECT_BRIEF          = "Моделювання динаміки CAP методом Рунге-Кутта 4-го порядку"
+OUTPUT_DIRECTORY       = docs/code
+OUTPUT_LANGUAGE        = Ukrainian
+INPUT                  = .
+FILE_PATTERNS          = *.h *.cpp
+RECURSIVE              = NO
+EXCLUDE                = build/
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = NO
+SOURCE_BROWSER         = YES
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+HAVE_DOT               = NO
+CLASS_DIAGRAMS         = YES
+USE_MATHJAX            = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_NO_PARAMDOC       = YES
+"@ | Out-File -FilePath Doxyfile -Encoding utf8

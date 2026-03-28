@@ -1,0 +1,45 @@
+\doxysection{Engine\+Model.\+h File Reference}
+\hypertarget{_engine_model_8h}{}\label{_engine_model_8h}\index{EngineModel.h@{EngineModel.h}}
+
+
+Математична модель системи автоматичного регулювання авіаційного двигуна.  
+
+
+{\ttfamily \+\#include "{}Types.\+h"{}}\newline
+{\ttfamily \+\#include $<$cmath$>$}\newline
+{\ttfamily \+\#include $<$stdexcept$>$}\newline
+{\ttfamily \+\#include $<$iostream$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_engine_model}{Engine\+Model}}
+\begin{DoxyCompactList}\small\item\em Клас математичної моделі CAP авіаційного двигуна. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Математична модель системи автоматичного регулювання авіаційного двигуна. 
+
+Реалізує математичну модель САР на основі диференціального рівняння 4-\/го порядку:\+
+
+\[T \cdot x^{(4)} + (1 + rTk_2) \cdot x\textnormal{\textquotesingle}\textnormal{\textquotesingle}\textnormal{\textquotesingle} + Tk_1k_2k_3 \cdot x\textnormal{\textquotesingle}\textnormal{\textquotesingle} =
+k_1 T \cdot F\textnormal{\textquotesingle}\textnormal{\textquotesingle}\textnormal{\textquotesingle} + (k_1 + rTk_2) \cdot F\textnormal{\textquotesingle}\textnormal{\textquotesingle}
+\]
+
+де:\+
+\begin{DoxyItemize}
+\item x(t) — кількість обертів валу турбіни (об/\+с)
+\item F(t) = F0 \texorpdfstring{$\ast$}{*} exp(-\/alpha \texorpdfstring{$\ast$}{*} t) — зовнішнє збурення (подача палива)
+\item T — стала часу системи
+\item r — коефіцієнт зворотного зв\textquotesingle{}язку
+\item k1, k2, k3 — коефіцієнти передачі
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+Мажборода Д. М. 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2025 
+\end{DoxyDate}
+\begin{DoxySeeAlso}{See also}
+\doxylink{class_r_k_solver}{RKSolver} 
+\end{DoxySeeAlso}

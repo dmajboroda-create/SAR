@@ -1,0 +1,100 @@
+\doxysection{Types.\+h File Reference}
+\hypertarget{_types_8h}{}\label{_types_8h}\index{Types.h@{Types.h}}
+
+
+Базові типи даних для системи автоматичного регулювання авіаційного двигуна.  
+
+
+{\ttfamily \+\#include $<$array$>$}\newline
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}} = std::\+array$<$double, \doxymbox{\hyperlink{_types_8h_a10ab9175e322b363dbb1f78fe065c8e0}{SYSTEM\+\_\+\+ORDER}}$>$
+\begin{DoxyCompactList}\small\item\em Вектор стану системи у поточний момент часу. \end{DoxyCompactList}\item 
+using \doxymbox{\hyperlink{_types_8h_a098de6a70ba84311faddccfb401f47e8}{Derivative\+Func}} = \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}} (\texorpdfstring{$\ast$}{*})(double t, const \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}}\& y)
+\begin{DoxyCompactList}\small\item\em Тип вказівника на функцію правої частини системи ДР. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr size\+\_\+t \doxymbox{\hyperlink{_types_8h_a10ab9175e322b363dbb1f78fe065c8e0}{SYSTEM\+\_\+\+ORDER}} = 4
+\begin{DoxyCompactList}\small\item\em Порядок системи диференціальних рівнянь. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Базові типи даних для системи автоматичного регулювання авіаційного двигуна. 
+
+Містить визначення вектора стану, вказівника на функцію правої частини системи диференціальних рівнянь та константу порядку системи.
+
+\begin{DoxyAuthor}{Author}
+Мажборода Д. М. 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2025 
+\end{DoxyDate}
+
+
+\label{doc-typedef-members}
+\Hypertarget{_types_8h_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{_types_8h_a098de6a70ba84311faddccfb401f47e8}\index{Types.h@{Types.h}!DerivativeFunc@{DerivativeFunc}}
+\index{DerivativeFunc@{DerivativeFunc}!Types.h@{Types.h}}
+\doxysubsubsection{\texorpdfstring{DerivativeFunc}{DerivativeFunc}}
+{\footnotesize\ttfamily \label{_types_8h_a098de6a70ba84311faddccfb401f47e8} 
+using \doxymbox{\hyperlink{_types_8h_a098de6a70ba84311faddccfb401f47e8}{Derivative\+Func}} = \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}} (\texorpdfstring{$\ast$}{*})(double t, const \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}}\& y)}
+
+
+
+Тип вказівника на функцію правої частини системи ДР. 
+
+Функція обчислює вектор похідних dy/\+dt = f(t, y).
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & Поточний час (секунди) \\
+\hline
+{\em y} & Поточний вектор стану \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Вектор похідних у момент часу t 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_c_1_2_s_a_r_2_runge_kutta_8h-example}{C:\+/\+\+SAR/\+\+Runge\+Kutta.\+h}}.\end{Desc}
+\Hypertarget{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}\index{Types.h@{Types.h}!State@{State}}
+\index{State@{State}!Types.h@{Types.h}}
+\doxysubsubsection{\texorpdfstring{State}{State}}
+{\footnotesize\ttfamily \label{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977} 
+using \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}} = std::\+array$<$double, \doxymbox{\hyperlink{_types_8h_a10ab9175e322b363dbb1f78fe065c8e0}{SYSTEM\+\_\+\+ORDER}}$>$}
+
+
+
+Вектор стану системи у поточний момент часу. 
+
+Вектор містить:\+ \{x, x\textquotesingle{}, x\textquotesingle{}\textquotesingle{}, x\textquotesingle{}\textquotesingle{}\textquotesingle{}\}, де:\+
+\begin{DoxyItemize}
+\item x — кількість обертів валу турбіни (об/\+с)
+\item x\textquotesingle{} — перша похідна (швидкість зміни обертів)
+\item x\textquotesingle{}\textquotesingle{} — друга похідна (прискорення)
+\item x\textquotesingle{}\textquotesingle{}\textquotesingle{} — третя похідна 
+\end{DoxyItemize}\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_c_1_2_s_a_r_2_runge_kutta_8h-example}{C:\+/\+\+SAR/\+\+Runge\+Kutta.\+h}}.\end{Desc}
+
+
+\label{doc-var-members}
+\Hypertarget{_types_8h_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{_types_8h_a10ab9175e322b363dbb1f78fe065c8e0}\index{Types.h@{Types.h}!SYSTEM\_ORDER@{SYSTEM\_ORDER}}
+\index{SYSTEM\_ORDER@{SYSTEM\_ORDER}!Types.h@{Types.h}}
+\doxysubsubsection{\texorpdfstring{SYSTEM\_ORDER}{SYSTEM\_ORDER}}
+{\footnotesize\ttfamily \label{_types_8h_a10ab9175e322b363dbb1f78fe065c8e0} 
+size\+\_\+t SYSTEM\+\_\+\+ORDER = 4\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Порядок системи диференціальних рівнянь. 
+
+Диференціальне рівняння авіаційного двигуна має 4-\/й порядок, тому система зводиться до 4 рівнянь 1-\/го порядку. \begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_c_1_2_s_a_r_2_runge_kutta_8h-example}{C:\+/\+\+SAR/\+\+Runge\+Kutta.\+h}}.\end{Desc}

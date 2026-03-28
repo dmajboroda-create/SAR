@@ -1,0 +1,46 @@
+\doxysection{RKSolver Class Reference}
+\hypertarget{class_r_k_solver}{}\label{class_r_k_solver}\index{RKSolver@{RKSolver}}
+
+
+Клас для чисельного інтегрування методом Рунге-\/Кутта 4-\/го порядку.  
+
+
+
+
+{\ttfamily \+\#include $<$Runge\+Kutta.\+h$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_r_k_solver_a1060644f9e0c590369c658aeb82748f8}\label{class_r_k_solver_a1060644f9e0c590369c658aeb82748f8} 
+static \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}} {\bfseries step} (double t, const \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}} \&y, double h, \doxymbox{\hyperlink{_types_8h_a098de6a70ba84311faddccfb401f47e8}{Derivative\+Func}} f)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Клас для чисельного інтегрування методом Рунге-\/Кутта 4-\/го порядку. 
+
+Реалізує класичний RK4-\/алгоритм для розв\textquotesingle{}язання систем звичайних диференціальних рівнянь вигляду dy/\+dt = f(t, y).
+
+Формула RK4:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{k1\ =\ f(t,\ y)}
+\DoxyCodeLine{k2\ =\ f(t\ +\ h/2,\ y\ +\ h*k1/2)}
+\DoxyCodeLine{k3\ =\ f(t\ +\ h/2,\ y\ +\ h*k2/2)}
+\DoxyCodeLine{k4\ =\ f(t\ +\ h,\ y\ +\ h*k3)}
+\DoxyCodeLine{y\_\{n+1\}\ =\ y\_n\ +\ (h/6)*(k1\ +\ 2*k2\ +\ 2*k3\ +\ k4)}
+
+\end{DoxyCode}
+
+
+\begin{DoxySeeAlso}{See also}
+\doxylink{class_engine_model_a25c434429185d9a7d1f27c971c1d4ac0}{Engine\+Model::\+compute\+Derivatives()} 
+\end{DoxySeeAlso}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_c_1_2_s_a_r_2_runge_kutta_8h-example}{C:\+/\+\+SAR/\+\+Runge\+Kutta.\+h}}.\end{Desc}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_runge_kutta_8h}{Runge\+Kutta.\+h}}\end{DoxyCompactItemize}

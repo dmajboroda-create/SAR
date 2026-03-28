@@ -1,0 +1,13 @@
+SAST REPORT
+Date: 12.01.2026 20:23:21,61
+
+=== CLANG-TIDY ===
+============================================
+CLANG-TIDY ANALYSIS REPORT
+============================================
+
+Date: 12.01.2026 20:23:21,43
+
+
+=== CPPCHECK ===
+nofile:0: [information] Active checkers: 183/975 (use --checkers-report=<filename> to see details)

@@ -1,0 +1,122 @@
+\doxysection{Engine\+Model.\+h}
+\hypertarget{_engine_model_8h_source}{}\label{_engine_model_8h_source}\doxymbox{\hyperlink{_engine_model_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_types_8h}{Types.h}}"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_engine_model}{EngineModel}}\ \{}
+\DoxyCodeLine{00045\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_ga963e47c57a1981d96fe70296c4e00ce4}{r}};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_gabdbfc912eb48f8b546104231eb394e35}{k1}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_ga7ed89bdeda8b13e2d9070555d5f5f38c}{k2}};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_ga2905c445a0ba8caa4c97b03476544776}{k3}};}
+\DoxyCodeLine{00066\ \ \textcolor{comment}{//\ end\ of\ SystemParameters}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___disturbance_parameters_gad6dbd7b7ebe4403079e4244ca7bb29e1}{F0}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}};}
+\DoxyCodeLine{00083\ \ \textcolor{comment}{//\ end\ of\ DisturbanceParameters}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_engine_model_a8070ad8fdce4faa0cf6da38efbabb9ad}{F}}(\textcolor{keywordtype}{double}\ t)\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ <\ 0)\ \{\ \textcolor{keywordflow}{return}\ 0.0;\ \}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group___disturbance_parameters_gad6dbd7b7ebe4403079e4244ca7bb29e1}{F0}}\ *\ std::exp(-\/\doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}}\ *\ t);}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_engine_model_a8356e530050bf17e932f3da925d2ec3c}{F\_first\_derivative}}(\textcolor{keywordtype}{double}\ t)\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/\doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}}\ *\ \doxymbox{\hyperlink{class_engine_model_a8070ad8fdce4faa0cf6da38efbabb9ad}{F}}(t);}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_engine_model_a03452888218140c56d8795a30f362736}{F\_second\_derivative}}(\textcolor{keywordtype}{double}\ t)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}}\ *\ \doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}}\ *\ \doxymbox{\hyperlink{class_engine_model_a8070ad8fdce4faa0cf6da38efbabb9ad}{F}}(t);}
+\DoxyCodeLine{00124\ \ \ \ \ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_engine_model_a68076bcca7c95207b7340172746d51c7}{F\_third\_derivative}}(\textcolor{keywordtype}{double}\ t)\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/\doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}}\ *\ \doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}}\ *\ \doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}}\ *\ \doxymbox{\hyperlink{class_engine_model_a8070ad8fdce4faa0cf6da38efbabb9ad}{F}}(t);}
+\DoxyCodeLine{00136\ \ \ \ \ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}}\ \doxymbox{\hyperlink{class_engine_model_a25c434429185d9a7d1f27c971c1d4ac0}{computeDerivatives}}(\textcolor{keywordtype}{double}\ t,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}}\&\ current\_state)\ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_types_8h_a91bfa04bc80e46f2d4103f5f5b953977}{State}}\ dydt;}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x\_double\ \ =\ current\_state[2];}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x\_triple\ \ =\ current\_state[3];}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ dydt[0]\ =\ current\_state[1];}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ dydt[1]\ =\ current\_state[2];}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ dydt[2]\ =\ current\_state[3];}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ F\_dd\ \ =\ \doxymbox{\hyperlink{class_engine_model_a03452888218140c56d8795a30f362736}{F\_second\_derivative}}(t);}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ F\_ddd\ =\ \doxymbox{\hyperlink{class_engine_model_a68076bcca7c95207b7340172746d51c7}{F\_third\_derivative}}(t);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ coef\_x\_triple\ =\ (1.0\ +\ (\doxymbox{\hyperlink{group___system_parameters_ga963e47c57a1981d96fe70296c4e00ce4}{r}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga7ed89bdeda8b13e2d9070555d5f5f38c}{k2}}));}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ coef\_x\_double\ =\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}}\ *\ \doxymbox{\hyperlink{group___system_parameters_gabdbfc912eb48f8b546104231eb394e35}{k1}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga7ed89bdeda8b13e2d9070555d5f5f38c}{k2}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga2905c445a0ba8caa4c97b03476544776}{k3}};}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ coef\_F\_dd\ \ \ \ \ =\ (\doxymbox{\hyperlink{group___system_parameters_gabdbfc912eb48f8b546104231eb394e35}{k1}}\ +\ (\doxymbox{\hyperlink{group___system_parameters_ga963e47c57a1981d96fe70296c4e00ce4}{r}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga7ed89bdeda8b13e2d9070555d5f5f38c}{k2}}));}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ coef\_F\_ddd\ \ \ \ =\ \doxymbox{\hyperlink{group___system_parameters_gabdbfc912eb48f8b546104231eb394e35}{k1}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}};}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(\doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}})\ <\ 1e-\/10)\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}T\ cannot\ be\ zero\ (singular\ system)."{}});}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x\_fourth\ =\ (coef\_F\_ddd\ *\ F\_ddd\ +\ coef\_F\_dd\ *\ F\_dd}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ coef\_x\_triple\ *\ x\_triple}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ coef\_x\_double\ *\ x\_double)\ /\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ dydt[3]\ =\ x\_fourth;}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dydt;}
+\DoxyCodeLine{00193\ \ \ \ \ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___diagnostic_coefficients_gab65375bdee25fb2dac152990d7e89fdd}{compute\_C1}}()\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}}\ *\ \doxymbox{\hyperlink{group___system_parameters_gabdbfc912eb48f8b546104231eb394e35}{k1}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga7ed89bdeda8b13e2d9070555d5f5f38c}{k2}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga2905c445a0ba8caa4c97b03476544776}{k3}};}
+\DoxyCodeLine{00207\ \ \ \ \ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___diagnostic_coefficients_gafb103b8b346b5c0dd2a9f2fe946cfe9f}{compute\_C2}}()\ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (1.0\ +\ (\doxymbox{\hyperlink{group___system_parameters_ga963e47c57a1981d96fe70296c4e00ce4}{r}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}}\ *\ \doxymbox{\hyperlink{group___system_parameters_ga7ed89bdeda8b13e2d9070555d5f5f38c}{k2}}));}
+\DoxyCodeLine{00215\ \ \ \ \ \}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___diagnostic_coefficients_gac4f8c2eef9133e4ec3556d9b6f8ef035}{compute\_C3}}()\ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}};}
+\DoxyCodeLine{00223\ \ \ \ \ \}}
+\DoxyCodeLine{00224\ \ \textcolor{comment}{//\ end\ of\ DiagnosticCoefficients}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_engine_model_a549757aaa625f33e3d2fb1d483b524b3}{printParameters}}()\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}===\ System\ Parameters\ ==="{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}T\ \ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{T}}\ \ <<\ \textcolor{stringliteral}{"{}\ (time\ constant,\ s)"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}r\ \ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___system_parameters_ga963e47c57a1981d96fe70296c4e00ce4}{r}}\ \ <<\ \textcolor{stringliteral}{"{}\ (feedback\ coefficient)"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}k1\ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___system_parameters_gabdbfc912eb48f8b546104231eb394e35}{k1}}\ <<\ \textcolor{stringliteral}{"{}\ (transfer\ coefficient\ 1)"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}k2\ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___system_parameters_ga7ed89bdeda8b13e2d9070555d5f5f38c}{k2}}\ <<\ \textcolor{stringliteral}{"{}\ (transfer\ coefficient\ 2)"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}k3\ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___system_parameters_ga2905c445a0ba8caa4c97b03476544776}{k3}}\ <<\ \textcolor{stringliteral}{"{}\ (transfer\ coefficient\ 3)"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Disturbance\ F(t):"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}F0\ \ \ \ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___disturbance_parameters_gad6dbd7b7ebe4403079e4244ca7bb29e1}{F0}}\ \ \ \ <<\ \textcolor{stringliteral}{"{}\ (initial\ value)"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}alpha\ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{alpha}}\ <<\ \textcolor{stringliteral}{"{}\ (decay\ coefficient,\ 1/s)"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Coefficients\ in\ notation\ (2):"{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}C1\ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___diagnostic_coefficients_gab65375bdee25fb2dac152990d7e89fdd}{compute\_C1}}()\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}C2\ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___diagnostic_coefficients_gafb103b8b346b5c0dd2a9f2fe946cfe9f}{compute\_C2}}()\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}C3\ =\ "{}}\ <<\ \doxymbox{\hyperlink{group___diagnostic_coefficients_gac4f8c2eef9133e4ec3556d9b6f8ef035}{compute\_C3}}()\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}========================="{}}\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00250\ \ \ \ \ \}}
+\DoxyCodeLine{00251\ \};}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{comment}{//\ Initialize\ static\ members}}
+\DoxyCodeLine{00254\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_ga4e36e4aaf652d64ce02f372a18fea7a5}{EngineModel::T}}\ \ \ \ \ =\ 0.0;}
+\DoxyCodeLine{00255\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_ga963e47c57a1981d96fe70296c4e00ce4}{EngineModel::r}}\ \ \ \ \ =\ 0.0;}
+\DoxyCodeLine{00256\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_gabdbfc912eb48f8b546104231eb394e35}{EngineModel::k1}}\ \ \ \ =\ 0.0;}
+\DoxyCodeLine{00257\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_ga7ed89bdeda8b13e2d9070555d5f5f38c}{EngineModel::k2}}\ \ \ \ =\ 0.0;}
+\DoxyCodeLine{00258\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___system_parameters_ga2905c445a0ba8caa4c97b03476544776}{EngineModel::k3}}\ \ \ \ =\ 0.0;}
+\DoxyCodeLine{00259\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___disturbance_parameters_gad6dbd7b7ebe4403079e4244ca7bb29e1}{EngineModel::F0}}\ \ \ \ =\ 0.0;}
+\DoxyCodeLine{00260\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group___disturbance_parameters_ga79f7cf9300452ffe734697f243db4218}{EngineModel::alpha}}\ =\ 0.0;}
+
+\end{DoxyCode}
