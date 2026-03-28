@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="uk">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SAR: Клас RKSolver</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">SAR
+   </div>
+   <div id="projectbrief">Моделювання динаміки CAP методом Рунге-Кутта 4-го порядку</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Створено системою Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Пошук',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('class_r_k_solver.html','','class_r_k_solver-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Завантаження...</div>
+<div class="SRStatus" id="Searching">Пошук...</div>
+<div class="SRStatus" id="NoMatches">Нічого не знайдено</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Клас RKSolver</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Клас для чисельного інтегрування методом Рунге-Кутта 4-го порядку.  
+ <a href="#details">Детальніше...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_runge_kutta_8h_source.html">RungeKutta.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Загальнодоступні статичні елементи</h2></td></tr>
+<tr class="memitem:a1060644f9e0c590369c658aeb82748f8" id="r_a1060644f9e0c590369c658aeb82748f8"><td class="memItemLeft">static <a class="el" href="_types_8h.html#a91bfa04bc80e46f2d4103f5f5b953977">State</a>&#160;</td><td class="memItemRight"><a class="el" href="#a1060644f9e0c590369c658aeb82748f8">step</a> (double t, const <a class="el" href="_types_8h.html#a91bfa04bc80e46f2d4103f5f5b953977">State</a> &amp;y, double h, <a class="el" href="_types_8h.html#a098de6a70ba84311faddccfb401f47e8">DerivativeFunc</a> f)</td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Детальний опис</h2>
+<div class="textblock"><p>Клас для чисельного інтегрування методом Рунге-Кутта 4-го порядку. </p>
+<p>Реалізує класичний RK4-алгоритм для розв'язання систем звичайних диференціальних рівнянь вигляду dy/dt = f(t, y).</p>
+<p>Формула RK4: </p><div class="fragment"><div class="line">k1 = f(t, y)</div>
+<div class="line">k2 = f(t + h/2, y + h*k1/2)</div>
+<div class="line">k3 = f(t + h/2, y + h*k2/2)</div>
+<div class="line">k4 = f(t + h, y + h*k3)</div>
+<div class="line">y_{n+1} = y_n + (h/6)*(k1 + 2*k2 + 2*k3 + k4)</div>
+</div><!-- fragment --><dl class="section see"><dt>Див. також</dt><dd><a class="el" href="class_engine_model.html#a25c434429185d9a7d1f27c971c1d4ac0" title="Обчислює вектор похідних стану системи dy/dt = f(t, y).">EngineModel::computeDerivatives()</a> </dd></dl>
+<dl class="section examples"><dt>Приклади</dt><dd><a class="el" href="_c_1_2_s_a_r_2_runge_kutta_8h-example.html#_a3">C:/SAR/RungeKutta.h</a>.</dd>
+</dl>
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_runge_kutta_8h_source.html">RungeKutta.h</a>, рядок <a class="el" href="_runge_kutta_8h_source.html#l00032">32</a></p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Опис методів компонент</h2>
+<a id="a1060644f9e0c590369c658aeb82748f8" name="a1060644f9e0c590369c658aeb82748f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1060644f9e0c590369c658aeb82748f8">&#9670;&#160;</a></span>step()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_types_8h.html#a91bfa04bc80e46f2d4103f5f5b953977">State</a> RKSolver::step </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>t</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="_types_8h.html#a91bfa04bc80e46f2d4103f5f5b953977">State</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>h</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_types_8h.html#a098de6a70ba84311faddccfb401f47e8">DerivativeFunc</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section examples"><dt>Приклади</dt><dd><a class="el" href="_c_1_2_s_a_r_2_runge_kutta_8h-example.html#a1">C:/SAR/RungeKutta.h</a>.</dd>
+</dl>
+
+<p class="definition">Див. визначення в файлі <a class="el" href="_runge_kutta_8h_source.html">RungeKutta.h</a>, рядок <a class="el" href="_runge_kutta_8h_source.html#l00058">58</a></p>
+
+</div>
+</div>
+<hr/>Документація цього класу була створена з файлу:<ul>
+<li><a class="el" href="_runge_kutta_8h_source.html">RungeKutta.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="class_r_k_solver.html">RKSolver</a></li>
+    <li class="footer">Створено системою <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>
