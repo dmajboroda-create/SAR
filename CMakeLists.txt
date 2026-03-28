@@ -19,6 +19,9 @@ add_executable(engine_simulation
         RungeKutta.h
         Types.h
         Logger.h
+        error_messages.h
+        error_messages.h
+        error_messages.h
 )
 
 target_link_libraries(engine_simulation

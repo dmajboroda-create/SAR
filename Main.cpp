@@ -184,13 +184,30 @@ int main() {
         }
     } catch (const std::runtime_error& ex) {
         // ERR-002: сингулярна система (T == 0)
-        spdlog::critical("[ERR-002] Singular system detected at step {}: {}. "
-                         "Check parameter T (must be > 0).", step_count, ex.what());
+        spdlog::critical("[ERR-002] Singular system at step {} (t={:.4f}): {}. "
+                         "Context: state=[{:.4f}, {:.4f}, {:.4f}, {:.4f}], T={}. "
+                         "Fix: parameter T must be > 1e-10.",
+                         step_count, t_start + step_count * h,
+                         ex.what(),
+                         state[0], state[1], state[2], state[3],
+                         EngineModel::T);
+        // Повідомлення для кінцевого користувача (без технічних деталей)
+        std::cerr << "\n[!] ПОМИЛКА МОДЕЛЮВАННЯ\n"
+                  << "    Причина: некоректний параметр T (стала часу).\n"
+                  << "    Дія: перезапустіть програму та введіть T > 0.\n"
+                  << "    Код помилки: ERR-002\n"
+                  << "    Зв'яжіться з розробником: majboroda@example.com\n\n";
         file.close();
         return 1;
     } catch (const std::exception& ex) {
-        // ERR-003: непередбачена помилка під час інтегрування
-        spdlog::error("[ERR-003] Unexpected error at step {}: {}", step_count, ex.what());
+        spdlog::error("[ERR-003] Unexpected error at step {} (t={:.4f}): {}. "
+                      "Context: state=[{:.4f}, {:.4f}, {:.4f}, {:.4f}].",
+                      step_count, t_start + step_count * h,
+                      ex.what(),
+                      state[0], state[1], state[2], state[3]);
+        std::cerr << "\n[!] НЕПЕРЕДБАЧЕНА ПОМИЛКА\n"
+                  << "    Код помилки: ERR-003\n"
+                  << "    Зв'яжіться з розробником: majboroda@example.com\n\n";
         file.close();
         return 1;
     }
