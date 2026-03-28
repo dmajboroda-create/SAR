@@ -40,7 +40,7 @@ public:
         // Final calculation: y_{n+1} = y_n + (h/6)·(k₁ + 2k₂ + 2k₃ + k₄)
         State result;
         for (size_t i = 0; i < SYSTEM_ORDER; ++i) {
-            result[i] = y[i] + (h / 6.0) * (k1[i] + 2.0 * k2[i] + 2.0 * k3[i] + k4[i]);
+            result[i] = y[i] + (h / 6.0) * (k1[i] + (2.0 * k2[i]) + (2.0 * k3[i]) + k4[i]);
         }
 
         return result;

@@ -39,7 +39,7 @@ public:
     static double alpha;  // Decay rate (1/s)
 
     static double F(double t) {
-        if (t < 0) return 0.0;
+        if (t < 0) { return 0.0; }
         // Exponential decay - always positive
         return F0 * std::exp(-alpha * t);
     }
@@ -107,7 +107,7 @@ public:
         double F_ddd = F_third_derivative(t);   // d^3F/dt^3
 
         // Calculate coefficients from equation (1)
-        double coef_x_triple = (1.0 + r * T * k2);     // Coefficient at x'''
+        double coef_x_triple = (1.0 + (r * T * k2));     // Coefficient at x'''
         double coef_x_double = T * k1 * k2 * k3;        // Coefficient at x''
         double coef_F_dd = (k1 + r * T * k2);           // Coefficient at F''
         double coef_F_ddd = k1 * T;                     // Coefficient at F'''

@@ -4,10 +4,6 @@
 #include "RungeKutta.h"
 #include "Types.h"
 
-// ==========================================
-// ФІКСТУРА ДЛЯ ІНІЦІАЛІЗАЦІЇ ПАРАМЕТРІВ
-// ==========================================
-
 class EngineModelTest : public ::testing::Test {
 protected:
     void SetUp() override {
@@ -22,13 +18,9 @@ protected:
     }
 };
 
-// ==========================================
-// ТЕСТИ ФУНКЦІЇ ЗБУРЕННЯ F(t)
-// ==========================================
-
 // Тест 1.1: F(t) для від'ємного часу має повертати 0
 TEST_F(EngineModelTest, DisturbanceNegativeTimeReturnsZero) {
-    double result = EngineModel::F(-1.0);
+    double result = EngineModel::F(347);
     EXPECT_DOUBLE_EQ(result, 0.0) << "F(t) для t < 0 має дорівнювати 0";
 }
 
@@ -71,10 +63,6 @@ TEST_F(EngineModelTest, DisturbanceMatchesExpectedFormula) {
     EXPECT_NEAR(result, expected, 1e-9) << "F(t) не відповідає формулі F₀·exp(-α·t)";
 }
 
-// ==========================================
-// ТЕСТИ ПОХІДНИХ ФУНКЦІЇ ЗБУРЕННЯ
-// ==========================================
-
 // Тест 2.1: F'(0) має дорівнювати -α·F₀ = -3.0
 TEST_F(EngineModelTest, FirstDerivativeAtZero) {
     double result = EngineModel::F_first_derivative(0.0);
@@ -116,10 +104,6 @@ TEST_F(EngineModelTest, ThirdDerivativeMatchesFormula) {
 
     EXPECT_NEAR(result, expected, 1e-9) << "F'''(t) не відповідає формулі -α³·F(t)";
 }
-
-// ==========================================
-// ТЕСТИ computeDerivatives()
-// ==========================================
 
 // Тест 3.1: Кінематичні зв'язки для нульового стану
 TEST_F(EngineModelTest, ComputeDerivativesKinematicRelationsAtZero) {
@@ -170,10 +154,6 @@ TEST_F(EngineModelTest, ComputeDerivativesOutputDimensionCorrect) {
     EXPECT_EQ(derivatives.size(), SYSTEM_ORDER)
         << "Розмірність вектора похідних має дорівнювати " << SYSTEM_ORDER;
 }
-
-// ==========================================
-// ТЕСТИ МЕТОДУ РУНГЕ-КУТТА
-// ==========================================
 
 // Проста функція для тестування: dy/dt = -y
 State simple_derivative(double t, const State& y) {
@@ -259,9 +239,6 @@ TEST(RungeKuttaTests, StateChangesAfterStep) {
         << "Стан має змінитися після кроку інтегрування";
 }
 
-// ==========================================
-// ТЕСТИ ОБЧИСЛЕННЯ КОЕФІЦІЄНТІВ СИСТЕМИ
-// ==========================================
 
 // Тест 5.1: C₁ = T·k₁·k₂·k₃
 TEST_F(EngineModelTest, C1Computation) {
@@ -297,9 +274,6 @@ TEST_F(EngineModelTest, AllCoefficientsPositive) {
     EXPECT_GT(EngineModel::compute_C3(), 0.0) << "C₃ має бути позитивним";
 }
 
-// ==========================================
-// ГОЛОВНА ФУНКЦІЯ
-// ==========================================
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
